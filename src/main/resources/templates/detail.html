@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>ZHEMU的小世界</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/css/typo.css}">
+    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+</head>
+<body>
+
+<!--    导航栏-->
+
+<!--    检查点-->
+
+
+<br>
+<br>
+<br>
+
+
+<!--    中间容器-->
+<div  id="context" class="ui container  m-padded-tb-large animated zoomIn">
+    <div class="ui stackable grid">
+        <!--            间隔2个单位-->
+        <div class="two wide column"></div>
+        <!--            中间内容-->
+        <div class=" twelve wide column">
+
+            <div class="ui fluid special cards">
+                <!--                    遮罩-->
+                <div  class="ui fluid m-shadow-small animated slideInLeft card">
+                    <div class="blurring dimmable image">
+                        <!--                            遮罩后的内容-->
+                        <div class="ui dimmer">
+                            <div class="content">
+                                <div class="center">
+                                </div>
+                            </div>
+                        </div>
+                        <!--                            遮罩前的图片-->
+                        <div>
+                            <img src="../static/images/Konachan-329266-Large.png" th:src="@{${goods.goodsImg}}" class="ui rounded image m-shadow-small">
+                        </div>
+                    </div>
+                    <!--                        图片内容-->
+                    <div class="content">
+                        <a class="header" th:text="${goods.goodsTitle}">Kristy</a>
+                        <div class="meta m-margin-top">
+                            <i class="calendar icon"style="margin-right: 10px"></i>[[${#dates.format(goods.startDate,'yyyy-MM-dd HH:mm:ss')}]]
+                        </div>
+                        <div class="description m-margin-top" th:text="'原价：'+${goods.goodsPrice}">
+                            一个无名的小菜鸟
+                        </div>
+                    </div>
+                    <div class="extra content">
+                    <span class="right floated"><a href="#"  class="ui teal label column" th:text="'总数:'+${goods.stockCount}" >认知升级</a></span>
+                    </div>
+                    <div id="seckillTip" class="extra content">
+                        <input type="hidden" id="remainSeconds" th:value="${remainSeconds}">
+                        <span th:if="${secKillStatus eq 0}" >秒杀倒计时:<span id="countDown" th:text="${remainSeconds}+'秒'"></span></span>
+                        <span th:if="${secKillStatus eq 1}" >秒杀进行中</span>
+                        <span th:if="${secKillStatus eq 2}" >秒杀结束</span>
+                    </div>
+                    <div class="extra content">
+                        <form th:action="@{/seckill}" method="get">
+                            <input type="hidden" id="goodId" name="goodId" th:value="${goods.id}">
+                            <button id="buyButton" class="ui bule button">[[${goods.seckillPrice}]]</button>
+                        </form>
+
+                    </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--                上下页-->
+        </div>
+    </div>
+</div>
+
+
+<div id="aplayer"></div>
+
+<!--    工具栏-->
+
+<br>
+<br>
+
+<!--    底部-->
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.3/jquery.scrollTo.min.js"></script>
+<script>
+
+
+    $('.meau.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    })
+
+    $('#toTop-button').click(function () {
+        $(window).scrollTo(0,500);
+    })
+
+    $('#toContext').click(function () {
+        $(window).scrollTo('#waypoint',500);
+    })
+
+
+
+
+    $('.image').dimmer({
+        on: 'hover'
+    });
+
+    $(function () {
+        countDown();
+    });
+
+    function countDown() {
+        var remainSeconds = $("#remainSeconds").val();
+        var timeout;
+        if(remainSeconds>0){
+            timeout = setTimeout(function () {
+                $('#buyButton').attr("disabled",true);
+                $('#countDown').text(remainSeconds-1);
+                $('#remainSeconds').val(remainSeconds-1);
+                countDown();
+            },1000);
+        }else if (remainSeconds == 0){
+            if(timeout){
+                clearTimeout(timeout);
+            }
+            $("#seckillTip").html("秒杀进行中");
+            $('#buyButton').attr("disabled",false);
+        }else {
+            $("#seckillTip").html("秒杀结束");
+            $('#buyButton').attr("disabled",true);
+        }
+    }
+</script>
+</body>
+</html>

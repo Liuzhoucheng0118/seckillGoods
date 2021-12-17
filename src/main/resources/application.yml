@@ -1,0 +1,75 @@
+server:
+  port: 8080
+
+spring:
+  thymeleaf:
+    cache: false
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123123
+    hikari:
+      pool-name: DatePool
+#      最小空闲连接
+      minimum-idle: 5
+#      默认存活
+      idle-timeout: 180000
+#      最大连接数
+      maximum-pool-size: 10
+#      是否自动自动提交
+      auto-commit: true
+#      连接超时
+      connection-timeout: 30000
+#      心跳机制，检查连接是否正常
+      connection-test-query: SELECT 1
+  redis:
+    host: localhost
+    port: 6379
+    lettuce:
+      pool:
+        #最大连接数
+        max-active: 8
+        #阻塞等待
+        max-wait: 10000ms
+        #最大空闲
+        max-idle: 200
+        #最小空弦
+        min-idle: 5
+
+  rabbitmq:
+    host: localhost
+    username: admin
+    password: 123123
+    virtual-host: /
+    port: 5672
+    listener:
+      simple:
+#        消费者最小数量
+        concurrency: 10
+#        消防者最大数量
+        max-concurrency: 10
+#        消费者每次只能处理一条消息，处理完后再接受下一条
+        prefetch: 1
+#        启动时是否默认启动容器
+        auto-startup: true
+#        被拒绝时重新进入队列
+        default-requeue-rejected: true
+    template:
+      retry:
+#        发布重试
+        enabled: true
+#        重试时间间隔
+        initial-interval: 1000ms
+        max-attempts: 3
+        max-interval: 10000ms
+        multiplier: 1
+
+mybatis-plus:
+  type-aliases-package: com.lzc.seckill.pojo
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+
+logging:
+  level:
+   com.lzc.seckill.mapper: debug

@@ -44,6 +44,8 @@ spring:
     password: 123123
     virtual-host: /
     port: 5672
+
+
     listener:
       simple:
 #        消费者最小数量
@@ -56,6 +58,7 @@ spring:
         auto-startup: true
 #        被拒绝时重新进入队列
         default-requeue-rejected: true
+        acknowledge-mode: manual
     template:
       retry:
 #        发布重试
@@ -65,6 +68,8 @@ spring:
         max-attempts: 3
         max-interval: 10000ms
         multiplier: 1
+    publisher-confirm-type: correlated
+    publisher-returns: true
 
 mybatis-plus:
   type-aliases-package: com.lzc.seckill.pojo

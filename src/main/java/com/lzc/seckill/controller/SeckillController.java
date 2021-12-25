@@ -1,5 +1,6 @@
 package com.lzc.seckill.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.lzc.seckill.config.AccessLimit;
 import com.lzc.seckill.pojo.Order;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author liuzhoucheng
@@ -85,10 +87,11 @@ public class SeckillController implements InitializingBean {
         }
 //        序列化
         OrderMessage orderMessage = new OrderMessage(user,goodId);
-        String message = JSONObject.toJSONString(orderMessage);
+        String message = JSON.toJSONString(orderMessage);
 //        向队列中加入下单信息
         mqSender.toSeckillGoods(message);
-
+//        消息失败的重传次数
+        redisTemplate.opsForValue().set("message:"+user.getId()+goodId,10,10, TimeUnit.SECONDS);
         return "success";
     }
 

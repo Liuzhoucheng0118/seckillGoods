@@ -12,7 +12,6 @@ class SeckillApplicationTests {
     @Test
     void contextLoads() {
 
-        System.out.println(MD5Utile.inputToDBPass("7wzhzgmqmzllzj", "1a2b3c4d"));
 
     }
 }
